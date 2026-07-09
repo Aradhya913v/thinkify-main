@@ -29,15 +29,35 @@ console.log('Starting server with', {
     DATABASE_NAME,
 });
 
-app.use(
-    cors({
-        origin: [
-            "http://localhost:5173",
-            "https://thinkify.vercel.app",
-        ],
-        credentials: true,
-    })
-);
+const allowedOrigins = (process.env.CORS_ORIGIN || "http://localhost:5173,https://thinkify-main.vercel.app")
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
+const corsOptions = {
+    origin: (origin, callback) => {
+        if (!origin) {
+            callback(null, true);
+            return;
+        }
+
+        const isAllowed = allowedOrigins.includes(origin) || origin.endsWith('.vercel.app');
+        if (isAllowed) {
+            callback(null, true);
+            return;
+        }
+
+        callback(new Error('Not allowed by CORS'));
+    },
+    credentials: true,
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    preflightContinue: false,
+    optionsSuccessStatus: 204,
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 app.use('/api', express.static("uploads"));
