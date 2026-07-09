@@ -89,6 +89,21 @@ const login = async (req, res) => {
     }
 }
 
+const dummyLogin = async (req, res) => {
+    try {
+        const dummyUser = {
+            _id: "000000000000000000000000",
+            fullName: "Demo User",
+            email: "demo@thinkify.app",
+            role: "user"
+        };
+        const token = jwt.sign({ dummy: true, user: dummyUser }, process.env.JWT_SECRET_KEY, { expiresIn: process.env.COOKIE_EXPIRES });
+        res.status(200).json({ status: true, message: "Dummy Login Successful", token, user: dummyUser });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ status: false, message: "Internal Server Error" });
+    }
+}
 
 const getUserData = async (req, res) => {
     try {
@@ -98,7 +113,7 @@ const getUserData = async (req, res) => {
         const totalProducts = await ProductModel.countDocuments({ authorId: userId });
         const ongoingTasks = await TaskModel.countDocuments({ authorId: userId, taskStatus: 'ongoing' });
 
-        const user = req.user.toObject();
+        const user = typeof req.user.toObject === "function" ? req.user.toObject() : req.user;
         user.totalPosts = totalPosts;
         user.totalProducts = totalProducts;
         user.ongoingTasks = ongoingTasks;
@@ -365,4 +380,4 @@ const removeUser = async (req, res) => {
 
 }
 
-export { registration, login, getUserData, changePassword, getUsers, removeUser, getUserActivity }
+export { registration, login, dummyLogin, getUserData, changePassword, getUsers, removeUser, getUserActivity }

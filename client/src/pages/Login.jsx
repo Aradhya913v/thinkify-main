@@ -77,7 +77,38 @@ const Login = () => {
       setAlertSeverity("error");
       setAlertMessage("Something Went Wrong");
       // server error message with status code
-      error.response.data.message
+      error.response?.data?.message
+        ? setAlertMessage(error.response.data.message)
+        : setAlertMessage(error.message);
+    }
+  };
+
+  const handleDummyLogin = async () => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_SERVER_ENDPOINT}/users/dummy-login`
+      );
+      if (response.data.status) {
+        Cookies.set(import.meta.env.VITE_TOKEN_KEY, response.data.token, {
+          expires: Number(import.meta.env.VITE_COOKIE_EXPIRES),
+          path: "",
+        });
+        Cookies.set(import.meta.env.VITE_USER_ROLE, response.data.user.role, {
+          expires: Number(import.meta.env.VITE_COOKIE_EXPIRES),
+          path: "",
+        });
+        navigate("/profile");
+      } else {
+        setAlertBoxOpenStatus(true);
+        setAlertSeverity("error");
+        setAlertMessage(response.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      setAlertBoxOpenStatus(true);
+      setAlertSeverity("error");
+      setAlertMessage("Something Went Wrong");
+      error.response?.data?.message
         ? setAlertMessage(error.response.data.message)
         : setAlertMessage(error.message);
     }
@@ -235,6 +266,16 @@ const Login = () => {
                 startIcon={<GoogleIcon />}
               >
                 Continue With Google
+              </Button>
+            </Box>
+            <Box sx={{ mt: 1 }}>
+              <Button
+                type="button"
+                variant="outlined"
+                fullWidth
+                onClick={handleDummyLogin}
+              >
+                Demo Login
               </Button>
             </Box>
             <Box>
