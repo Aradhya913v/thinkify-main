@@ -4,8 +4,7 @@ Thinkify is a vibrant space where people from diverse backgrounds and interests 
 
 # Preview
 
-<img src="/preview.png">
-<a href="https://thinkify.vercel.app" target="_blank">Live Preview</a> | <a href="https://thinkify-server.vercel.app" target="_blank">Live API</a> | <a href="https://documenter.getpostman.com/view/27027258/2sA3dxEXJh" target="_blank">Postman</a>
+This repo currently assumes only the backend is deployed. The frontend can run locally against the deployed backend.
 
 # Requirements
 
@@ -19,9 +18,9 @@ git clone https://github.com/masum184e/thinkify.git
 # BACKEND
 cd server
 npm install
-npx nodemon index.js
+npm start
 
-# FRONTEND
+# FRONTEND (local)
 cd ../client
 npm install
 npm run dev
@@ -29,13 +28,14 @@ npm run dev
 
 # Environment Variables
 
-## Frontend
+## Frontend (local development)
 
 ```
-VITE_SERVER_ENDPOINT = https://thinkify-server.vercel.app:3000/api
+VITE_SERVER_ENDPOINT = https://thinkify-main.vercel.app/api
 VITE_TOKEN_KEY = thinkify
 VITE_USER_ROLE = role
 VITE_COOKIE_EXPIRES = 1
+VITE_COOKIE_KEY = thinkify
 ```
 
 ## Backend
@@ -49,6 +49,7 @@ JWT_SECRET_KEY = abcdefghijklmnopqrstuvwxyz
 COOKIE_EXPIRES = 5d
 COOKIE_KEY = thinkify
 UPLOAD_DIRECTORY = uploads
+CORS_ORIGIN = http://localhost:5173
 ```
 
 # Features

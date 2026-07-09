@@ -7,12 +7,3 @@ services:
     rootDir: server
     buildCommand: npm install
     startCommand: npm start
-
-  - type: static
-    name: thinkify-frontend
-    env: static
-    plan: free
-    branch: main
-    rootDir: client
-    buildCommand: npm install && npm run build
-    publishPath: dist

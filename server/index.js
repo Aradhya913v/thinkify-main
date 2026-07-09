@@ -29,7 +29,7 @@ console.log('Starting server with', {
     DATABASE_NAME,
 });
 
-const allowedOrigins = (process.env.CORS_ORIGIN || "http://localhost:5173,https://thinkify-main.vercel.app")
+const allowedOrigins = (process.env.CORS_ORIGIN || "http://localhost:5173")
     .split(',')
     .map((origin) => origin.trim())
     .filter(Boolean);
@@ -41,8 +41,7 @@ const corsOptions = {
             return;
         }
 
-        const isAllowed = allowedOrigins.includes(origin) || origin.endsWith('.vercel.app');
-        if (isAllowed) {
+        if (allowedOrigins.includes(origin)) {
             callback(null, true);
             return;
         }
